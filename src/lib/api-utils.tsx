@@ -28,10 +28,24 @@ export async function fetchSensorData(deviceId: string,interval:Duration) {
       },
     });
 
-    return login.data.readings;
+    if (login?.data?.readings) {
+      return login.data.readings.sort(function(a, b) {
+        // Compare the 2 dates
+        const t1 = a?.Timestamp;
+        const t2 = b?.Timestamp;
+
+        if (!t1 || !t2 || t1 === t2) {
+          return 0;
+        }
+        
+        return t1 < t2 ? -1 : 1;
+      });
+    } else {
+      // Handle the case where login.data.devices is undefined
+      console.error('Readings data is undefined');
+    }
   } catch (error) {
     console.error('Login error:', error);
-    return { login: null, error: 'Login failed' };
   }
 };
 
@@ -52,10 +66,8 @@ export async function fetchDevices(deviceId: string) {
     } else {
       // Handle the case where login.data.devices is undefined
       console.error('Devices data is undefined');
-      return { login: null, error: 'Devices data is undefined' };
     }
   } catch (error) {
     console.error('Login error:', error);
-    return { login: null, error: 'Login failed' };
   }
 };
