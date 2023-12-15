@@ -1,0 +1,25 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-florasite-dev-212533-authRole",
+      "UnauthRoleArn": "arn:aws:iam::391751429626:role/amplify-florasite-dev-212533-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::391751429626:role/amplify-florasite-dev-212533-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-florasite-dev-212533-deployment",
+      "UnauthRoleName": "amplify-florasite-dev-212533-unauthRole",
+      "StackName": "amplify-florasite-dev-212533",
+      "StackId": "arn:aws:cloudformation:us-east-2:391751429626:stack/amplify-florasite-dev-212533/71fce190-9a30-11ee-9198-02e1d9a7d5d7",
+      "AmplifyAppId": "d2w86cg589nsss"
+    },
+    "categories": {
+      "auth": {
+        "florasitef00b85d9": {
+          "userPoolId": "us-east-2_rEpqsqfPS",
+          "userPoolName": "florauserpool0BC585F9-nqnd4xW6uJh3",
+          "webClientId": "369sj44qc2ur3jha691v473ldj",
+          "nativeClientId": "385k1hf84lt25gaq72dqbfufor"
+        }
+      }
+    }
+  }
+}
