@@ -5,7 +5,6 @@ import * as mutations from '../graphql/mutations';
 import * as queries from '../graphql/queries';
 import { sub, getUnixTime } from 'date-fns';
 import { handleSignIn } from './auth-utils'
-import { DevicesQuery } from '@/API';
 
 Amplify.configure(config)
 const client = generateClient({
