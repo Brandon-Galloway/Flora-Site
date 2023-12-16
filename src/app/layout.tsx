@@ -19,14 +19,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className='flex flex-col h-screen justify-between'>
-          <header className='h-20'>
+        <div className='flex flex-col h-screen'>
+          <header className='h-20 fixed top w-full z-50'>
             <Navbar/>
           </header>
-          <div className='mb-auto h-10'>
+          <div className='flex-1 mb-10 mt-20'>
             {children}
           </div>
-          <footer className='bottom'>
+          <footer className='bottom-7 h-10 fixed w-full z-50'>
             <Footer/>
           </footer>
         </div>

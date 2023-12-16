@@ -1,14 +1,15 @@
 import { fetchSensorData } from "@/lib/api-utils";
+import { format } from 'date-fns';
 const targetDevice = process.env.DEVICE_ID ?? '';
 
 export default async function SensorDataTable() {
   
   const readings = await fetchSensorData(targetDevice,{
-      hours: 4
+      hours: 8
   });
   return (
       <div>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto max-h-full">
             <table className="table table-xs">
               <thead>
                 <tr>
@@ -24,7 +25,7 @@ export default async function SensorDataTable() {
               <tbody>
               {readings?.map((reading, index) => (
                 <tr key={index}>
-                  <td>{reading?.Timestamp}</td>
+                  <td>{format(new Date((reading?.Timestamp ?? 0) * 1000), 'yyyy-MM-dd HH:mm:ss')}</td>
                   <td>{reading?.Humidity}</td> 
                   <td>{reading?.AirTemperature}</td> 
                   <td>{reading?.SoilTemperature}</td> 

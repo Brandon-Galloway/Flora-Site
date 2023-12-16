@@ -6,14 +6,20 @@ Amplify.configure(config)
 
 export async function handleSignIn() {
   try {
-    const currentUser = await getCurrentSession();
-    if (currentUser == undefined) {
-      console.log("No user session found. Authenticating");
-      const params: SignInInput = {
-        username: process.env.ADMIN_USERNAME ?? '',
-        password: process.env.ADMIN_PASSWORD ?? '',
+    let currentUser = undefined;
+    try {
+      currentUser = await getCurrentSession();
+    } catch(error) {
+      console.log("Error grabbing current user: " + error)
+    }finally {
+      if (currentUser == undefined) {
+        console.log("No user session found. Authenticating");
+        const params: SignInInput = {
+          username: process.env.ADMIN_USERNAME ?? '',
+          password: process.env.ADMIN_PASSWORD ?? '',
+        }
+        const { isSignedIn, nextStep } = await signIn(params);
       }
-      const { isSignedIn, nextStep } = await signIn(params);
     }
   } catch (error) {
     console.log('error signing in', error);
