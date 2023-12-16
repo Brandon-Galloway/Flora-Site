@@ -4,7 +4,7 @@ import config from '../amplifyconfiguration.json'
 import * as mutations from '../graphql/mutations';
 import * as queries from '../graphql/queries';
 import { sub, getUnixTime } from 'date-fns';
-import { handleSignIn } from './auth-utils'
+import { handleSignIn, handleSignOut } from './auth-utils'
 
 Amplify.configure(config)
 const client = generateClient({
@@ -16,7 +16,7 @@ export async function fetchSensorData(deviceId: string,interval:Duration) {
     await handleSignIn();
     const currentTime = Date.now();
     const targetTime = sub(currentTime, interval)
-    const login = await client.graphql({
+    const response = await client.graphql({
       query: queries.readings,
       variables: {
         where: {
@@ -26,9 +26,9 @@ export async function fetchSensorData(deviceId: string,interval:Duration) {
         }
       },
     });
-
-    if (login?.data?.readings) {
-      return login.data.readings.sort(function(a, b) {
+    await handleSignOut();
+    if (response?.data?.readings) {
+      return response.data.readings.sort(function(a, b) {
         // Compare the 2 dates
         const t1 = a?.Timestamp;
         const t2 = b?.Timestamp;
@@ -51,7 +51,7 @@ export async function fetchSensorData(deviceId: string,interval:Duration) {
 export async function fetchDevices(deviceId: string) {
   try {
     await handleSignIn();
-    const login = await client.graphql({
+    const response = await client.graphql({
       query: queries.devices,
       variables: {
         where: {
@@ -59,9 +59,9 @@ export async function fetchDevices(deviceId: string) {
         }
       },
     });
-    
-    if (login?.data?.devices) {
-      return login.data.devices;
+    await handleSignOut();
+    if (response?.data?.devices) {
+      return response.data.devices;
     } else {
       // Handle the case where login.data.devices is undefined
       console.error('Devices data is undefined');

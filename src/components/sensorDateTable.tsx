@@ -5,7 +5,7 @@ const targetDevice = process.env.DEVICE_ID ?? '';
 export default async function SensorDataTable() {
   
   const readings = await fetchSensorData(targetDevice,{
-      hours: 8
+      hours: 24
   });
   return (
       <div>
@@ -25,7 +25,7 @@ export default async function SensorDataTable() {
               <tbody>
               {readings?.map((reading, index) => (
                 <tr key={index}>
-                  <td>{format(new Date((reading?.Timestamp ?? 0) * 1000), 'yyyy-MM-dd HH:mm:ss')}</td>
+                  <td>{format(new Date((reading?.Timestamp ?? 0) * 1000), 'MMM do hh:mm aaaa')}</td>
                   <td>{reading?.Humidity}</td> 
                   <td>{reading?.AirTemperature}</td> 
                   <td>{reading?.SoilTemperature}</td> 
