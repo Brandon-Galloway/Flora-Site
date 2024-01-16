@@ -3,32 +3,40 @@ import { generateClient } from 'aws-amplify/api'
 import config from '../amplifyconfiguration.json'
 import * as mutations from '../graphql/mutations';
 import * as queries from '../graphql/queries';
-import { sub, getUnixTime } from 'date-fns';
-import { handleSignIn, handleSignOut } from './auth-utils'
+import { signIn } from 'aws-amplify/auth';
+import { SensorSearchRange } from '@/API';
 
 Amplify.configure(config)
-const client = generateClient({
-  authMode: 'userPool',
-});
+const client  = await generateAuthenticatedClient();
 
-export async function fetchSensorData(deviceId: string,interval:Duration) {
+async function generateAuthenticatedClient() {
+  const client = generateClient({
+    authMode: 'userPool',
+  })
+  console.log("Signing In.")
+  await signIn({
+    username: process.env.ADMIN_USERNAME ?? '',
+    password: process.env.ADMIN_PASSWORD ?? '',
+  })
+  console.log("Signed In.")
+  return client;
+}
+
+export async function fetchSensorData(deviceId: string) {
+  console.log("Fetching Sensor Data")
   try {
-    await handleSignIn();
-    const currentTime = Date.now();
-    const targetTime = sub(currentTime, interval)
     const response = await client.graphql({
       query: queries.readings,
       variables: {
         where: {
           DeviceId: deviceId,
-          StartTimestamp: getUnixTime(targetTime),
-          EndTimestamp: getUnixTime(currentTime)
+          range: SensorSearchRange.DAILY,
+          page: null,
         }
       },
     });
-    await handleSignOut();
-    if (response?.data?.readings) {
-      return response.data.readings.sort(function(a, b) {
+    if (response?.data?.readings?.page) {
+      return response.data.readings.page.sort(function(a, b) {
         // Compare the 2 dates
         const t1 = a?.Timestamp;
         const t2 = b?.Timestamp;
@@ -49,8 +57,8 @@ export async function fetchSensorData(deviceId: string,interval:Duration) {
 };
 
 export async function fetchDevices(deviceId: string) {
+  console.log("Fetch Devices")
   try {
-    await handleSignIn();
     const response = await client.graphql({
       query: queries.devices,
       variables: {
@@ -59,7 +67,6 @@ export async function fetchDevices(deviceId: string) {
         }
       },
     });
-    await handleSignOut();
     if (response?.data?.devices) {
       return response.data.devices;
     } else {

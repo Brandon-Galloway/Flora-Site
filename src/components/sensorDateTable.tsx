@@ -4,9 +4,7 @@ const targetDevice = process.env.DEVICE_ID ?? '';
 
 export default async function SensorDataTable() {
   
-  const readings = await fetchSensorData(targetDevice,{
-      hours: 24
-  });
+  const readings = await fetchSensorData(targetDevice);
   return (
       <div>
           <div className="overflow-x-auto max-h-full">

@@ -136,8 +136,22 @@ export type Reading = {
 
 export type SensorDataSearch = {
   DeviceId: string,
-  StartTimestamp?: number | null,
-  EndTimestamp?: number | null,
+  range: SensorSearchRange,
+  page?: string | null,
+};
+
+// Query [Inputs]
+export enum SensorSearchRange {
+  RECENT = "RECENT",
+  HOURLY = "HOURLY",
+  DAILY = "DAILY",
+}
+
+
+export type SensorReadings = {
+  __typename: "SensorReadings",
+  page?:  Array<SensorReading | null > | null,
+  nextToken?: string | null,
 };
 
 export type SensorReading = {
@@ -351,18 +365,22 @@ export type ReadingsQueryVariables = {
 };
 
 export type ReadingsQuery = {
-  readings?:  Array< {
-    __typename: "SensorReading",
-    DeviceId: string,
-    Timestamp: number,
-    SoilTemperature: number,
-    SoilMoisture?: number | null,
-    AirTemperature: number,
-    Humidity: number,
-    Light: number,
-    VisibleLight: number,
-    InfraredLight: number,
-  } | null > | null,
+  readings?:  {
+    __typename: "SensorReadings",
+    page?:  Array< {
+      __typename: "SensorReading",
+      DeviceId: string,
+      Timestamp: number,
+      SoilTemperature: number,
+      SoilMoisture?: number | null,
+      AirTemperature: number,
+      Humidity: number,
+      Light: number,
+      VisibleLight: number,
+      InfraredLight: number,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
 };
 
 export type DevicesQueryVariables = {

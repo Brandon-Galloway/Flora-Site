@@ -158,15 +158,19 @@ export const weather = /* GraphQL */ `query Weather($location: ID!) {
 ` as GeneratedQuery<APITypes.WeatherQueryVariables, APITypes.WeatherQuery>;
 export const readings = /* GraphQL */ `query Readings($where: SensorDataSearch!) {
   readings(where: $where) {
-    DeviceId
-    Timestamp
-    SoilTemperature
-    SoilMoisture
-    AirTemperature
-    Humidity
-    Light
-    VisibleLight
-    InfraredLight
+    page {
+      DeviceId
+      Timestamp
+      SoilTemperature
+      SoilMoisture
+      AirTemperature
+      Humidity
+      Light
+      VisibleLight
+      InfraredLight
+      __typename
+    }
+    nextToken
     __typename
   }
 }
