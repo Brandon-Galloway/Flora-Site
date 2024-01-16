@@ -1,10 +1,12 @@
 import { fetchSensorData } from "@/lib/api-utils";
 import { format } from 'date-fns';
+import { SensorSearchRange } from '@/API';
+
 const targetDevice = process.env.DEVICE_ID ?? '';
 
 export default async function SensorDataTable() {
   
-  const readings = await fetchSensorData(targetDevice);
+  const readings = await fetchSensorData(targetDevice, SensorSearchRange.DAILY);
   return (
       <div>
           <div className="overflow-x-auto max-h-full">

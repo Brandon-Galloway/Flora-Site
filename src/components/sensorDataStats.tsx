@@ -1,5 +1,5 @@
 import { fetchSensorData, fetchDevices } from "@/lib/api-utils";
-import { getAuthToken } from "@/lib/auth-utils";
+import { SensorSearchRange } from '@/API';
 import { Duration, formatDuration, format } from "date-fns";
 const targetDevice = process.env.DEVICE_ID ?? '';
 
@@ -7,7 +7,7 @@ export default async function SensorDataStats() {
     const duration: Duration = {
         hours: 24
     }
-    const readings = await fetchSensorData(targetDevice);
+    const readings = await fetchSensorData(targetDevice, SensorSearchRange.DAILY);
     const device = (await fetchDevices(targetDevice))?.at(0);
     
     const averageReadings = readings?.length

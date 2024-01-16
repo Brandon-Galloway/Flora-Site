@@ -1,10 +1,11 @@
 import { Amplify } from 'aws-amplify';
 import { generateClient } from 'aws-amplify/api'
 import config from '../amplifyconfiguration.json'
-import * as mutations from '../graphql/mutations';
+// import * as mutations from '../graphql/mutations';
 import * as queries from '../graphql/queries';
 import { signIn } from 'aws-amplify/auth';
 import { SensorSearchRange } from '@/API';
+import _ from 'lodash';
 
 Amplify.configure(config)
 const client  = await generateAuthenticatedClient();
@@ -22,7 +23,7 @@ async function generateAuthenticatedClient() {
   return client;
 }
 
-export async function fetchSensorData(deviceId: string) {
+export async function fetchSensorData(deviceId: string, range: SensorSearchRange) {
   console.log("Fetching Sensor Data")
   try {
     const response = await client.graphql({
@@ -30,27 +31,13 @@ export async function fetchSensorData(deviceId: string) {
       variables: {
         where: {
           DeviceId: deviceId,
-          range: SensorSearchRange.DAILY,
+          range: range,
           page: null,
         }
       },
     });
-    if (response?.data?.readings?.page) {
-      return response.data.readings.page.sort(function(a, b) {
-        // Compare the 2 dates
-        const t1 = a?.Timestamp;
-        const t2 = b?.Timestamp;
-
-        if (!t1 || !t2 || t1 === t2) {
-          return 0;
-        }
-        
-        return t1 < t2 ? -1 : 1;
-      });
-    } else {
-      // Handle the case where login.data.devices is undefined
-      console.error('Readings data is undefined');
-    }
+    const readings = _.sortBy(response.data.readings?.page || [], 'Timestamp')
+    return response.data.readings?.page;
   } catch (error) {
     console.error('Login error:', error);
   }
